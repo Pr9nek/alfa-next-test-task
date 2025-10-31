@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type Product = {
 	id: number | string;
@@ -8,6 +8,8 @@ export type Product = {
 	price?: number;
 	image?: string;
 	created?: boolean;
+	thumbnail?: string;
+	images?: string[];
 	category?: string; // added: some public APIs (fakestore) provide category
 };
 
@@ -112,7 +114,7 @@ export const useProductsStore = create<State>()(
 					// DummyJSON returns { products: [...], total, skip, limit }
 					const payload = await res.json();
 					const data: Product[] = Array.isArray(payload.products) ? payload.products : [];
-					const normalized = data.map((p: any) => ({
+					const normalized = data.map((p) => ({
 						...p,
 						id: p.id,
 						title: p.title,
@@ -192,7 +194,8 @@ export const useProductsStore = create<State>()(
 		}),
 		{
 			name: 'alfa-products-storage',
-			getStorage: () => (typeof window !== 'undefined' ? localStorage : undefined),
+			// storage: () => (typeof window !== 'undefined' ? localStorage : undefined),
+			storage: createJSONStorage(() => (typeof window !== 'undefined' ? localStorage : undefined) as Storage),
 		}
 	)
 );
