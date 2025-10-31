@@ -28,8 +28,8 @@ export default function CreateProduct() {
       id: `new-${Date.now()}`,
       title: form.title.trim(),
       description: form.description.trim(),
-      price: form.price ? Number(form.price) : undefined,
-      image: form.image.trim() || undefined,
+      price:  Number(form.price),
+      image: form.image.trim(),
       created: true
     });
 
